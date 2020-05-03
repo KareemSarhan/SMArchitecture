@@ -4,6 +4,9 @@ import java.io.*;
  * This class is our project's main class and contains all the stages.
  */
 public class Processor {
+	static String ALUresult;
+	static boolean zero;
+	
 	public static InstructionMemory IM = new InstructionMemory();
 	public static ProgramCounter PC = new ProgramCounter();
 	/**
@@ -61,6 +64,58 @@ public class Processor {
 	 * <p>
 	 *Example toBinary(3):"00000000000000000000000000000011"
 	 */
+	String ALUOp;
+	String ALUSrc;
+	String ReadData1;
+	String ReadData2;
+	String Immediate;
+	
+
+
+
+
+
+
+	//Stages
+	public void Execute(String ALUOp ,String ALUSrc,String ReadData1,String ReadData2,
+							String Immediate,String PC) {
+		//check the branch signal
+		String Branch="";
+		//PC
+		//Jump Signal 
+		String Jump="";
+		//ALUSrc Signal
+		if(Branch.equals("1")){
+			ALU alu=new ALU(ALUOp, ReadData1, ReadData2);
+			ALUresult=alu.ALUCont();
+			if(Integer.parseInt(ALUresult,2)==0)
+				//Set the PC
+				PC=Immediate;
+			
+			return ;
+		}
+		if(Jump.equals("1")){
+			PC=Immediate;
+			return;
+		}
+		if(ALUSrc.equals("1")){
+			ALU alu=new ALU(ALUOp, ReadData1, Immediate);
+			ALUresult=alu.ALUCont();
+			return;
+		}
+		
+		
+	}
+
+
+
+
+
+
+
+
+
+	//Additional helper methods
 	public static String toBinary(int x) {
 		StringBuilder result = new StringBuilder();
 		for (int i = 31; i >= 0; i--) {
