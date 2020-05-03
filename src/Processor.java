@@ -12,6 +12,5 @@ public class Processor {
 
 	public static void main(String[] args) {
 		System.out.println("SMArchitecture");
-		System.out.println("Master");
 	}
 }
