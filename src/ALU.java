@@ -18,8 +18,28 @@ public class ALU{
                 return this.addOp(Op1, Op2); //-> SUB
             }
             case "010":{
-                
-                return "";
+                //Multiply  
+                return MultiOp(Op1, Op2);
+            }
+            case "011":{
+                //Or
+                return OROp(Op1, Op2);
+            }
+            case "100":{
+                //AND
+                return ANDOp(Op1, Op2);
+            }
+            case "101":{
+                //Shift Right
+                return slrOp(Op1,Op2);
+            }
+            case "110":{
+                //Shift Left
+                return sllOp(Op1, Op2);
+            }
+            case "111":{
+                //Set on Less than
+                return sltOp(Op1,Op2);
             }
             default:return "Wrong ALUOp Signal";
         }
@@ -33,15 +53,19 @@ public class ALU{
     public String MultiOp(String Op1,String Op2){
         return Processor.toBinary((Integer.parseInt(Op1,2))*(Integer.parseInt(Op2,2)));
     } 
-    public static String ANDOp(String Operand1,String Operand2) {
+    public String ANDOp(String Operand1,String Operand2) {
         return Processor.toBinary((int)Long.parseLong(Operand1,2) & (int)Long.parseLong(Operand2,2));
     }
-    public static String OROp(String Operand1,String Operand2) {
+    public String OROp(String Operand1,String Operand2) {
         return Processor.toBinary((int)Long.parseLong(Operand1,2) | (int)Long.parseLong(Operand2,2));
     }
-    
-    
-    public static String sltOp(String Operand1, String Operand2) {
+    public String slrOp(String Op1,String Op2){
+        return "";
+    }
+    public String sllOp(String Op1,String Op2){
+        return "";
+    }
+    public String sltOp(String Operand1, String Operand2) {
         return Processor.toBinary((((int)Long.parseLong(Operand1,2)<(int)Long.parseLong(Operand2,2))? 1 : 0));
     }
 }
