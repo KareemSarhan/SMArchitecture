@@ -1,20 +1,20 @@
 public class ProgramCounter {
-    int PC;
+    static int PC;
     public ProgramCounter()
     {
         PC=0;
     }
     public int Get()
     {
-        return this.PC;
+        return ProgramCounter.PC;
     }
     public void Set(int PC)
     {
-        this.PC=PC;
+        ProgramCounter.PC=PC;
     }
     public void Increment()
     {
-        this.PC++;
+        ProgramCounter.PC++;
     }
     //     public static void main(String[] args)
     // {
