@@ -4,40 +4,18 @@ import java.io.*;
  * This class is our project's main class and contains all the stages.
  */
 public class Processor {
-
-	/**Write comments you want to leave here !!
-	 * 
-	 */
-	/**Describe any added variable's use and write an one example or more to what it will contain.
-	 *String CI ==> CurrentInstruction
-	 * 		String CI Contains the instruction currently in use in Binary Format
-	 * 		Example : 00000001101011100111100000100101
-	 */		
 	public static InstructionMemory IM = new InstructionMemory();
 	public static ProgramCounter PC = new ProgramCounter();
-	//
-	public static String CI = "";
-	/**TestCases
-	 * Fetch
-00100000000010000000000000000101
-10001110000010010000000000000000
-00000001010010110110000000100000
-00000001101011100111100000100101
-10101110001100100000000000000000
-00010010000000000000000011111111 
-	 * Decode
-	 * Execute
-	 * Memory
-	 * WriteBack
+	/**
+	 * Contains the instruction currently in use in 32 bit Binary Format 
+	 * Example : 00000001101011100111100000100101
 	 */
+	public static String CI = "";
+
 	public static void main(String[] args) throws IOException {
 		System.out.println("SMArchitecture");
-		System.out.println("Fetch");
-		Load();
-		while(IM.Size>PC.Get())
-			Fetch();
 	}
-	/**Load()
+	/**
 	 * Loads User input to the memory
 	 */
 	public static void Load() throws IOException {
@@ -46,9 +24,9 @@ public class Processor {
 			IM.MemWrite(Instruction);
 		}
 	}
-	/**toBinary()
-	 * Converts from int to 32 bits Binary String
-	 * 3 ==> "00000000000000000000000000000011"
+	/**
+	 * Converts from int to 32 bits Binary String .
+	 * Example toBinary(3): "00000000000000000000000000000011"
 	 */
 	public static String toBinary(int x) {
         StringBuilder result = new StringBuilder();
@@ -58,9 +36,9 @@ public class Processor {
         }
         return result.toString();
 	}
-	/**Fetch()
-	 * Gets next instruction from InstructionMemory IM bassed on ProgramCounter PC
-	 * Increments ProgramCounter PC by 1
+	/**
+	 * Gets next instruction from IM bassed on PC
+	 * Increments PC by 1
 	 * Print Next PC,Instruction
 	 */
 	public static void Fetch() {
@@ -73,4 +51,23 @@ public class Processor {
 		"Instruction: "+CI
 		);
 	}
+		/**
+	 * TestCases 
+	 * Fetch 
+00100000000010000000000000000101
+10001110000010010000000000000000 
+00000001010010110110000000100000
+00000001101011100111100000100101 
+10101110001100100000000000000000
+00010010000000000000000011111111 
+	 * Decode Execute Memory WriteBack
+	 */
+	/**
+	 * Describe any added variable's use and write an one example or more to what it
+	 * will contain.
+	 */
+	/**
+	 * Write comments you want to leave here !!
+	 * 
+	 */
 }
