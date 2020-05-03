@@ -6,29 +6,32 @@ import java.io.*;
 public class Processor {
 	static String ALUresult;
 	static boolean zero;
-	
 	public static InstructionMemory IM = new InstructionMemory();
 	public static ProgramCounter PC = new ProgramCounter();
 	/**
-	 * Contains the instruction currently in use in 32 bit Binary Format Example :
-	 * 00000001101011100111100000100101
+	 * Contains the instruction currently in use in 32 bit Binary Format 
+	 * <p> Example : "00000001101011100111100000100101"
 	 */
 	public static String CI = "";
 	// modules
-	private RegisterFile registerFile;
-	private Control control;
+	public RegisterFile registerFile;
+	public Control control;
 	// pipeline registers
-	private String[] ifIdRegisters;
-	private Object[] idExRegisters;
+	public String[] ifIdRegisters;
+	public Object[] idExRegisters;
 	//private Object[] exMemRegisters;
-	private Object[] memWbRegisters;
+	public Object[] memWbRegisters;
 	// outputs
-	private String[] executeControlSignals;
-	private String[] memoryControlSignals;
-	private String[] writeBackControlSignals;
-	private String readData1;
-	private String readData2;
-
+	public String[] executeControlSignals;
+	public String[] memoryControlSignals;
+	public String[] writeBackControlSignals;
+	public String readData1;
+	public String readData2;
+	public String ALUOp;
+	public String ALUSrc;
+	public String ReadData1;
+	public String ReadData2;
+	public String Immediate;
 	// constructor
 	public Processor() {
 		registerFile = new RegisterFile(this);
@@ -41,14 +44,12 @@ public class Processor {
 	}
 
 	public static void main(String[] args) throws IOException {
-		System.out.println("SMArchitecture");
+		System.err.println("SMArchitecture");
 		Load();
 		while (PC.Get()<IM.Size) {
 			Fetch();
-
 		}
 	}
-
 	/**
 	 * Loads User input to the memory
 	 */
@@ -58,25 +59,6 @@ public class Processor {
 			IM.MemWrite(Instruction);
 		}
 	}
-
-	/**
-	 *Converts from int to 32 bits Binary String.
-	 * <p>
-	 *Example toBinary(3):"00000000000000000000000000000011"
-	 */
-	String ALUOp;
-	String ALUSrc;
-	String ReadData1;
-	String ReadData2;
-	String Immediate;
-	
-
-
-
-
-
-
-	//Stages
 	public void Execute(String ALUOp ,String ALUSrc,String ReadData1,String ReadData2,
 							String Immediate,String PC) {
 		//check the branch signal
@@ -103,18 +85,7 @@ public class Processor {
 			ALUresult=alu.ALUCont();
 			return;
 		}
-		
-		
 	}
-
-
-
-
-
-
-
-
-
 	//Additional helper methods
 	public static String toBinary(int x) {
 		StringBuilder result = new StringBuilder();
@@ -124,7 +95,6 @@ public class Processor {
 		}
 		return result.toString();
 	}
-
 	/**
 	 * Gets next instruction from IM bassed on PC Increments PC by 1 
 	 * <p> Prints Next PC,Instruction
@@ -135,30 +105,8 @@ public class Processor {
 		PC.Increment();
 		System.out.println("Next PC: " + toBinary(PC.Get()) + "\n" + "Instruction: " + CI);
 	}
-
-	// setters
-	public void setReadData1(String readData1) {
-		this.readData1 = readData1;
-	}
-
-	public void setReadData2(String readData2) {
-		this.readData2 = readData2;
-	}
-
-	public void setExecuteControlSignals(String[] executeControlSignals) {
-		this.executeControlSignals = executeControlSignals;
-	}
-
-	public void setMemoryControlSignals(String[] memoryControlSignals) {
-		this.memoryControlSignals = memoryControlSignals;
-	}
-
-	public void setWriteBackControlSignals(String[] writeBackControlSignals) {
-		this.writeBackControlSignals = writeBackControlSignals;
-	}
-
+	
 	public static String convertDecToBinUnsigned(int decimalNumber) {
-
 		String result = "";
 		for (int i = 0; i < 32; i++) {
 			int remainder = decimalNumber % 2;
@@ -169,7 +117,6 @@ public class Processor {
 	}
 
 	public static int convertBinToDecUnsigned(String binaryNumber) {
-
 		int result = 0;
 		int power = 0;
 		for (int i = binaryNumber.length() - 1; i >= 0; i--) {
@@ -239,9 +186,7 @@ public class Processor {
 		idExRegisters[6] = immediate;
 		idExRegisters[7] = rd;
 	}
-
 	public void WriteBack() {
-
 		// get the values from the previous stage
 		String[] writeBackControlSignals = (String[]) memWbRegisters[0];
 		String aluResult = (String) memWbRegisters[2];
@@ -258,8 +203,26 @@ public class Processor {
 		// register file
 		registerFile.write(writeRegister, writeData, writeBackControlSignals[0]);
 	}
-	// helper methods
+	// setters
+	public void setReadData1(String readData1) {
+		this.readData1 = readData1;
+	}
 
+	public void setReadData2(String readData2) {
+		this.readData2 = readData2;
+	}
+
+	public void setExecuteControlSignals(String[] executeControlSignals) {
+		this.executeControlSignals = executeControlSignals;
+	}
+
+	public void setMemoryControlSignals(String[] memoryControlSignals) {
+		this.memoryControlSignals = memoryControlSignals;
+	}
+
+	public void setWriteBackControlSignals(String[] writeBackControlSignals) {
+		this.writeBackControlSignals = writeBackControlSignals;
+	}
 	// stages
 	/**
 	 * TestCases 
