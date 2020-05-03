@@ -1,18 +1,23 @@
+import java.util.Vector;
+
 public class InstructionMemory {
-    int [] Memory ;
+    int Size = 0;
+	Vector<String> Memory ;
 
     public InstructionMemory()
     {
-        Memory = new int [1024];
+        Memory =new Vector<String>();
+        Size=this.Memory.size();
     }
-    public void MemWrite(int Address,int Instruction)
+    public void MemWrite(String Instruction)
     {
-        this.Memory[Address]=Instruction;
+        this.Memory.add(Instruction);
+        this.Size=this.Memory.size();
     }
-    public int MemRead(int Address)
+    public String MemRead(int Address)
     {
-        return this.Memory[Address];
-    }    
+        return this.Memory.get(Address);
+    }
     // public static void main(String[] args) {
     //     DataMemory x = new DataMemory();
     //     x.MemWrite(10, 10);
