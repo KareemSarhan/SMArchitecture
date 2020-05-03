@@ -48,6 +48,7 @@ public class DataMemory {
 		int address = Integer.parseInt(ad);
 		if(MemRead.equals("1")) {
 			String dataread = Readdata(address);
+			dataread=dataread+"";
 		}
 		if(MemWrite.equals("1")) {
 			writedata(address, data);

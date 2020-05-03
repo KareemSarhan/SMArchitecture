@@ -4,14 +4,23 @@ public class ProgramCounter {
     {
         PC=0;
     }
+    /**
+	 * Get ProgramCounter value
+	 */
     public int Get()
     {
         return ProgramCounter.PC;
     }
+    /**
+	 * Set ProgramCounter to input
+	 */
     public void Set(int PC)
     {
         ProgramCounter.PC=PC;
     }
+    /**
+	 * Increment ProgramCounter by 1
+	 */
     public void Increment()
     {
         ProgramCounter.PC++;
