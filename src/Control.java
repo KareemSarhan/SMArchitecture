@@ -22,10 +22,10 @@ public class Control {
 		switch (opcode) {
 			//sub
 			case "00000":
-				executeControlSignals[0] = "";
+				executeControlSignals[0] = "000";
 				executeControlSignals[1] = "0";
 				executeControlSignals[2] = "0";
-				executeControlSignals[3] = "0";
+				executeControlSignals[3] = "00";
 				memoryControlSignals[0] = "0";
 				memoryControlSignals[1] = "0";
 				writeBackControlSignals[0] = "1";
@@ -33,10 +33,10 @@ public class Control {
 				break;
 			//add
 			case "00001":
-				executeControlSignals[0] = "";
+				executeControlSignals[0] = "001";
 				executeControlSignals[1] = "0";
 				executeControlSignals[2] = "0";
-				executeControlSignals[3] = "0";
+				executeControlSignals[3] = "00";
 				memoryControlSignals[0] = "0";
 				memoryControlSignals[1] = "0";
 				writeBackControlSignals[0] = "1";
@@ -44,10 +44,10 @@ public class Control {
 				break;
 			//add immediate
 			case "00010":
-				executeControlSignals[0] = "";
+				executeControlSignals[0] = "001";
 				executeControlSignals[1] = "1";
 				executeControlSignals[2] = "0";
-				executeControlSignals[3] = "0";
+				executeControlSignals[3] = "00";
 				memoryControlSignals[0] = "0";
 				memoryControlSignals[1] = "0";
 				writeBackControlSignals[0] = "1";
@@ -55,10 +55,10 @@ public class Control {
 				break;
 			//multiply
 			case "00011":
-				executeControlSignals[0] = "";
+				executeControlSignals[0] = "010";
 				executeControlSignals[1] = "0";
 				executeControlSignals[2] = "0";
-				executeControlSignals[3] = "0";
+				executeControlSignals[3] = "00";
 				memoryControlSignals[0] = "0";
 				memoryControlSignals[1] = "0";
 				writeBackControlSignals[0] = "1";
@@ -66,10 +66,10 @@ public class Control {
 				break;
 			//or
 			case "00100":
-				executeControlSignals[0] = "";
+				executeControlSignals[0] = "011";
 				executeControlSignals[1] = "0";
 				executeControlSignals[2] = "0";
-				executeControlSignals[3] = "0";
+				executeControlSignals[3] = "00";
 				memoryControlSignals[0] = "0";
 				memoryControlSignals[1] = "0";
 				writeBackControlSignals[0] = "1";
@@ -77,10 +77,10 @@ public class Control {
 				break;
 			//and immediate
 			case "00101":
-				executeControlSignals[0] = "";
+				executeControlSignals[0] = "100";
 				executeControlSignals[1] = "1";
 				executeControlSignals[2] = "0";
-				executeControlSignals[3] = "0";
+				executeControlSignals[3] = "00";
 				memoryControlSignals[0] = "0";
 				memoryControlSignals[1] = "0";
 				writeBackControlSignals[0] = "1";
@@ -88,10 +88,10 @@ public class Control {
 				break;
 			//shift right logical
 			case "00110":
-				executeControlSignals[0] = "";
-				executeControlSignals[1] = "";
+				executeControlSignals[0] = "101";
+				executeControlSignals[1] = "00";
 				executeControlSignals[2] = "0";
-				executeControlSignals[3] = "0";
+				executeControlSignals[3] = "00";
 				memoryControlSignals[0] = "0";
 				memoryControlSignals[1] = "0";
 				writeBackControlSignals[0] = "1";
@@ -99,10 +99,10 @@ public class Control {
 				break;
 			//shift left logical
 			case "00111":
-				executeControlSignals[0] = "";
-				executeControlSignals[1] = "";
+				executeControlSignals[0] = "110";
+				executeControlSignals[1] = "0";
 				executeControlSignals[2] = "0";
-				executeControlSignals[3] = "0";
+				executeControlSignals[3] = "00";
 				memoryControlSignals[0] = "0";
 				memoryControlSignals[1] = "0";
 				writeBackControlSignals[0] = "1";
@@ -110,10 +110,10 @@ public class Control {
 				break;
 			//load word
 			case "01000":
-				executeControlSignals[0] = "";
+				executeControlSignals[0] = "000";
 				executeControlSignals[1] = "0";
 				executeControlSignals[2] = "0";
-				executeControlSignals[3] = "0";
+				executeControlSignals[3] = "00";
 				memoryControlSignals[0] = "1";
 				memoryControlSignals[1] = "0";
 				writeBackControlSignals[0] = "1";
@@ -121,10 +121,10 @@ public class Control {
 				break;
 			//store word
 			case "01001":
-				executeControlSignals[0] = "";
+				executeControlSignals[0] = "000";
 				executeControlSignals[1] = "0";
 				executeControlSignals[2] = "0";
-				executeControlSignals[3] = "0";
+				executeControlSignals[3] = "00";
 				memoryControlSignals[0] = "0";
 				memoryControlSignals[1] = "1";
 				writeBackControlSignals[0] = "0";
@@ -132,10 +132,10 @@ public class Control {
 				break;
 			//branch on equal
 			case "01010":
-				executeControlSignals[0] = "";
+				executeControlSignals[0] = "000";
 				executeControlSignals[1] = "0";
 				executeControlSignals[2] = "0";
-				executeControlSignals[3] = "1";
+				executeControlSignals[3] = "01";
 				memoryControlSignals[0] = "0";
 				memoryControlSignals[1] = "0";
 				writeBackControlSignals[0] = "0";
@@ -143,10 +143,10 @@ public class Control {
 				break;
 			//branch on less than
 			case "01011":
-				executeControlSignals[0] = "";
+				executeControlSignals[0] = "000";
 				executeControlSignals[1] = "0";
 				executeControlSignals[2] = "0";
-				executeControlSignals[3] = "1";
+				executeControlSignals[3] = "10";
 				memoryControlSignals[0] = "0";
 				memoryControlSignals[1] = "0";
 				writeBackControlSignals[0] = "0";
@@ -154,7 +154,7 @@ public class Control {
 				break;
 			//set on less than immediate
 			case "01100":
-				executeControlSignals[0] = "";
+				executeControlSignals[0] = "111";
 				executeControlSignals[1] = "1";
 				executeControlSignals[2] = "0";
 				executeControlSignals[3] = "0";
@@ -165,7 +165,7 @@ public class Control {
 				break;
 			//jump register
 			case "01101":
-				executeControlSignals[0] = "";
+				executeControlSignals[0] = "000";
 				executeControlSignals[1] = "0";
 				executeControlSignals[2] = "1";
 				executeControlSignals[3] = "0";
@@ -179,7 +179,7 @@ public class Control {
 				executeControlSignals[0] = "000";
 				executeControlSignals[1] = "0";
 				executeControlSignals[2] = "0";
-				executeControlSignals[3] = "0";
+				executeControlSignals[3] = "00";
 				memoryControlSignals[0] = "0";
 				memoryControlSignals[1] = "0";
 				writeBackControlSignals[0] = "0";
