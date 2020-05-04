@@ -31,8 +31,6 @@ public class Processor {
 	public String readData2;
 	public String ALUOp;
 	public String ALUSrc;
-	public String ReadData1;
-	public String ReadData2;
 	public String Immediate;
 	public String memoryReadData;
 	// constructor
@@ -41,9 +39,14 @@ public class Processor {
 		control = new Control(this);
 		dataMemory = new DataMemory(this);
 		
+		// ifId ={PC, CI}
 		ifIdRegisters = new Hashtable<String, String>();
+		//idEx={writeBackControlSignals, memoryControlSignals, executeControlSignals, PC5.readData1,
+		// 			readData2, immediate, writeRegister}
 		idExRegisters = new Hashtable<String, Object>();
+		//exMem={writeBackControlSignals, memoryControlSignals, ALUresult, readData2, writeRegister}
 		exMemRegisters = new Hashtable<String, Object>();
+		//memWb={writeBackControlSignals, memoryReadData, ALUresult, writeRegister}
 		memWbRegisters = new Hashtable<String, Object>();
 		
 	}
@@ -144,27 +147,35 @@ public class Processor {
 			IM.MemWrite(Instruction);
 		}
 	}
-	public void Execute(String ALUOp ,String ALUSrc,String ReadData1,String ReadData2,
-							String Immediate,String PC) {
-		//check the branch signal
-		String Branch="";
-		//PC
-		//Jump Signal
-		String Jump="";
-		//ALUSrc Signal
-		if(Branch.equals("1")){
-			ALU alu=new ALU(ALUOp, ReadData1, ReadData2);
+	public void Execute() {
+		// getting the inputs required for the execution
+		//executeControlSignals = {ALUControl, ALUSrc, Jump, Branch}
+		String [] exeControlSignals= (String[]) idExRegisters.get("executeControlSignals");
+		String ALUOp=executeControlSignals[0];
+		String Branch=exeControlSignals[3];
+		if(Branch.equals("01")){
+			//read1 and read2 bytgabo mnen fel instruction fel decode?????
+			ALU alu=new ALU(ALUOp, readData1, readData2);
 			ALUresult=alu.ALUCont();
 			if(Integer.parseInt(ALUresult,2)==0)
 				//Set the PC
-				PC=Immediate;
-			
+				PC.Set(Integer.parseInt(Immediate,2));
 			return ;
 		}
-		if(Jump.equals("1")){
-			PC=Immediate;
+		if(Branch.equals("10")){
+			ALU alu=new ALU(ALUOp, readData1, readData2);
+			ALUresult=alu.ALUCont();
+			if((int)Long.parseLong(ALUresult,2) <0)
+				//Set the PC
+				PC.Set(Integer.parseInt(Immediate,2));
 			return;
 		}
+		String Jump=exeControlSignals[2];
+		if(Jump.equals("1")){
+			PC.Set(Integer.parseInt(Immediate,2));
+			return;
+		}
+		String ALUSrc=executeControlSignals[1];
 		if(ALUSrc.equals("1")){
 			ALU alu=new ALU(ALUOp, ReadData1, Immediate);
 			ALUresult=alu.ALUCont();
