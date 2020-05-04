@@ -1,4 +1,5 @@
 import java.io.*;
+import java.util.Hashtable;
 
 /**
  * This class is our project's main class and contains all the stages.
@@ -16,11 +17,12 @@ public class Processor {
 	// modules
 	public RegisterFile registerFile;
 	public Control control;
+	public DataMemory dataMemory;
 	// pipeline registers
-	public String[] ifIdRegisters;
-	public Object[] idExRegisters;
-	//private Object[] exMemRegisters;
-	public Object[] memWbRegisters;
+	public Hashtable<String, String> ifIdRegisters;
+	public Hashtable<String, Object> idExRegisters;
+	public Hashtable<String, Object> exMemRegisters;
+	public Hashtable<String, Object> memWbRegisters;
 	// outputs
 	public String[] executeControlSignals;
 	public String[] memoryControlSignals;
@@ -32,21 +34,105 @@ public class Processor {
 	public String ReadData1;
 	public String ReadData2;
 	public String Immediate;
+	public String memoryReadData;
 	// constructor
 	public Processor() {
 		registerFile = new RegisterFile(this);
 		control = new Control(this);
-		ifIdRegisters = new String[2];
-		idExRegisters = new Object[8];
-		//exMemRegisters = new Object[6];
-		memWbRegisters = new Object[4];
+		dataMemory = new DataMemory(this);
+		
+		ifIdRegisters = new Hashtable<String, String>();
+		idExRegisters = new Hashtable<String, Object>();
+		exMemRegisters = new Hashtable<String, Object>();
+		memWbRegisters = new Hashtable<String, Object>();
+		
 	}
 
 	public static void main(String[] args) throws IOException {
+		
+		Processor p = new Processor();
+		
 		System.err.println("SMArchitecture");
 		Load();
+		int clockCycle = 0;
+		String instructionInFetch = "";
+		String instructionInDecode = "";
+		String instructionInExecute = "";
+		String instructionInMemory = "";
+		String instructionInWriteBack = "";
+		
 		while (PC.Get()<IM.Size) {
-			Fetch();
+			
+			System.out.println("Clock cycle " + clockCycle);
+			instructionInFetch = IM.MemRead(PC.Get());
+			
+			if (clockCycle==0) {
+				System.out.println();
+				System.out.println("Instruction: " + instructionInFetch + " is in Fetch stage");
+				Fetch();
+			}
+			else if (clockCycle==1) {
+				System.out.println();
+				System.out.println("Instruction: " + instructionInFetch + " is in Fetch stage");
+				Fetch();
+				System.out.println();
+				System.out.println("Instruction: " + instructionInDecode + " is in Decode stage");
+				p.instructionDecode();
+			}
+			else if (clockCycle==2) {
+				System.out.println();
+				System.out.println("Instruction: " + instructionInFetch + " is in Fetch stage");
+				Fetch();
+				System.out.println();
+				System.out.println("Instruction: " + instructionInDecode + " is in Decode stage");
+				p.instructionDecode();
+				System.out.println();
+				System.out.println("Instruction: " + instructionInExecute + " is in Execute stage");
+				//execute
+			}
+			else if (clockCycle==3) {
+				System.out.println();
+				System.out.println("Instruction: " + instructionInFetch + " is in Fetch stage");
+				Fetch();
+				System.out.println();
+				System.out.println("Instruction: " + instructionInDecode + " is in Decode stage");
+				p.instructionDecode();
+				System.out.println();
+				System.out.println("Instruction: " + instructionInExecute + " is in Execute stage");
+				//execute
+				System.out.println();
+				System.out.println("Instruction: " + instructionInMemory + " is in Memory Access stage");
+				p.memoryAccess();
+			}
+			else {
+				System.out.println();
+				System.out.println("Instruction: " + instructionInFetch + " is in Fetch stage");
+				Fetch();
+				System.out.println();
+				System.out.println("Instruction: " + instructionInDecode + " is in Decode stage");
+				p.instructionDecode();
+				System.out.println();
+				System.out.println("Instruction: " + instructionInExecute + " is in Execute stage");
+				//execute
+				System.out.println();
+				System.out.println("Instruction: " + instructionInMemory + " is in Memory Access stage");
+				p.memoryAccess();
+				System.out.println();
+				System.out.println("Instruction: " + instructionInWriteBack + " is in Write Back stage");
+				p.writeBack();
+			}
+			System.out.println();
+			System.out.println("--------------------------------------------------------------------------");
+			System.out.println();
+			
+			clockCycle++;
+			//shifting instructions
+			instructionInWriteBack = instructionInMemory;
+			instructionInMemory = instructionInExecute;
+			instructionInExecute = instructionInDecode;
+			instructionInDecode = instructionInFetch;
+			//shifting registers
+			
 		}
 	}
 	/**
@@ -63,7 +149,7 @@ public class Processor {
 		//check the branch signal
 		String Branch="";
 		//PC
-		//Jump Signal 
+		//Jump Signal
 		String Jump="";
 		//ALUSrc Signal
 		if(Branch.equals("1")){
@@ -142,11 +228,11 @@ public class Processor {
 	}
 
 	// stages
-	public void InstructionDecodeStage() {
+	public void instructionDecode() {
 
 		// get the values from the previous stage
-		String pc = ifIdRegisters[0];
-		String instruction = ifIdRegisters[1];
+		String pc = ifIdRegisters.get("PC");
+		String instruction = ifIdRegisters.get("CI");
 
 		// getting fields from the instruction
 		String opcode = "";
@@ -174,23 +260,26 @@ public class Processor {
 
 		// sign extend
 		immediate = SignExtend(immediate);
-
-		// save outputs to pipeline registers
-		idExRegisters[0] = writeBackControlSignals;
-		idExRegisters[1] = memoryControlSignals;
-		idExRegisters[2] = executeControlSignals;
-		idExRegisters[3] = pc;
-		idExRegisters[4] = readData1;
-		idExRegisters[5] = readData2;
-		idExRegisters[6] = immediate;
-		idExRegisters[7] = rd;
+		
+		//printing
+		System.out.println("Next PC: " + pc);
+		System.out.println("Read Register 1: " + r1);
+		System.out.println("Read Register 2: " + r2);
+		System.out.println("Write Register: " + rd);
+		System.out.println("Read data 1: " + readData1);
+		System.out.println("Read data 2: " + readData2);
+		System.out.println("Immediate: " + immediate);
+		System.out.println("EX controls: ALUControl: " + executeControlSignals[0] + ", ALUSrc: " + executeControlSignals[1] + ", Jump: " + executeControlSignals[2] + ", Branch: " + executeControlSignals[3]);
+		System.out.println("MEM controls: MemRead: " + memoryControlSignals[0] + ", MemWrite: " + memoryControlSignals[1]);
+		System.out.println("WB controls: RegWrite: " + writeBackControlSignals[0] + ", MemToReg: " + writeBackControlSignals[1]);	
 	}
-	public void WriteBack() {
+	
+	public void writeBack() {
 		// get the values from the previous stage
-		String[] writeBackControlSignals = (String[]) memWbRegisters[0];
-		String aluResult = (String) memWbRegisters[2];
-		String memoryReadData = (String) memWbRegisters[1];
-		String writeRegister = (String) memWbRegisters[3];
+		String[] writeBackControlSignals = (String[]) memWbRegisters.get("writeBackControlSignals");
+		String aluResult = (String) memWbRegisters.get("ALUresult");
+		String memoryReadData = (String) memWbRegisters.get("memoryReadData");
+		String writeRegister = (String) memWbRegisters.get("writeRegister");
 
 		// choose which data to write
 		String writeData;
@@ -201,7 +290,33 @@ public class Processor {
 
 		// register file
 		registerFile.write(writeRegister, writeData, writeBackControlSignals[0]);
+		
+		//printing
+		System.out.println("Write data: " + writeData);
+		System.out.println("Write Register: " + writeRegister);
+		System.out.println("WB controls: RegWrite: " + writeBackControlSignals[0] + ", MemToReg: " + writeBackControlSignals[1]);
 	}
+
+	public void memoryAccess() {
+		
+		String[] memoryControlSignals = (String[]) exMemRegisters.get("memoryControlSignals");
+		String address = (String) exMemRegisters.get("ALUresult");
+		String data = (String) exMemRegisters.get("readData2");
+		
+		int addressInt = Integer.parseInt(address);
+		String MemRead = memoryControlSignals[0];
+		String MemWrite = memoryControlSignals[1];
+		if(MemRead.equals("1")) {
+			dataMemory.readData(addressInt);
+		}
+		if(MemWrite.equals("1")) {
+			dataMemory.writeData(addressInt, data);
+		}
+		
+		//printing
+		
+	}
+	
 	// setters
 	public void setReadData1(String readData1) {
 		this.readData1 = readData1;
@@ -222,6 +337,11 @@ public class Processor {
 	public void setWriteBackControlSignals(String[] writeBackControlSignals) {
 		this.writeBackControlSignals = writeBackControlSignals;
 	}
+
+	public void setMemoryReadData(String memoryReadData) {
+		this.memoryReadData = memoryReadData;
+	}
+	
 	// stages
 	/**
 	 * TestCases 
