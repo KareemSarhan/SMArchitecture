@@ -6,8 +6,8 @@ import java.io.*;
 public class Processor {
 	static String ALUresult;
 	static boolean zero;
-	public static InstructionMemory IM = new InstructionMemory();
-	public static ProgramCounter PC = new ProgramCounter();
+	public static ProgramCounter PC;
+	public static InstructionMemory IM;
 	/**
 	 * Contains the instruction currently in use in 32 bit Binary Format 
 	 * <p> Example : "00000001101011100111100000100101"
@@ -36,10 +36,11 @@ public class Processor {
 	public Processor() {
 		registerFile = new RegisterFile(this);
 		control = new Control(this);
-
+		IM = new InstructionMemory();
+		PC = new ProgramCounter();
 		ifIdRegisters = new String[2];
 		idExRegisters = new Object[8];
-		// exMemRegisters = new Object[6];
+		//exMemRegisters = new Object[6];
 		memWbRegisters = new Object[4];
 	}
 
