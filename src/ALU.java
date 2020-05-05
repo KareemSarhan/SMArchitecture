@@ -39,7 +39,7 @@ public class ALU{
             }
             case "111":{
                 //Set on Less than
-                return sltOp(Op1,Op2);
+                return sltiOp(Op1,Op2);
             }
             default:return "Wrong ALUOp Signal";
         }
@@ -60,12 +60,12 @@ public class ALU{
         return Processor.toBinary((int)Long.parseLong(Operand1,2) | (int)Long.parseLong(Operand2,2));
     }
     public String slrOp(String Op1,String Op2){
-        return "";
+        return Processor.toBinary((int)Long.parseLong(Op1,2)>>(int)Long.parseLong(Op2,2));
     }
     public String sllOp(String Op1,String Op2){
-        return "";
+        return Processor.toBinary((int)Long.parseLong(Op1,2)<<(int)Long.parseLong(Op2,2));
     }
-    public String sltOp(String Operand1, String Operand2) {
+    public String sltiOp(String Operand1, String Operand2) {
         return Processor.toBinary((((int)Long.parseLong(Operand1,2)<(int)Long.parseLong(Operand2,2))? 1 : 0));
     }
 }
