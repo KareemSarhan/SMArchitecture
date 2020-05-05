@@ -1,31 +1,34 @@
-import java.util.Vector;
-
 public class InstructionMemory {
+    /**
+	 * Number of Instructions in the InstructionMemory
+     * <p> Gets incremented on MemWrite(String Instruction)
+	 */
     int Size = 0;
-	Vector<String> Memory ;
+	String [] Memory ;
     public InstructionMemory()
     {
-        Memory =new Vector<String>();
-        Size=this.Memory.size();
+        Memory =new String [1024];
     }
     /**
 	 * Writes Instruction to the next empty cell in InstructionMemory.
 	 */
     public void MemWrite(String Instruction)
     {
-        this.Memory.add(Instruction);
-        this.Size=this.Memory.size();
+        this.Memory[this.Size++]=Instruction;
     }
      /**
 	 * Reads Instruction in the given Memory Address.
 	 */
     public String MemRead(int Address)
     {
-        return this.Memory.get(Address);
+        return this.Memory[Address];
     }
     // public static void main(String[] args) {
-    //     DataMemory x = new DataMemory();
-    //     x.MemWrite(10, 10);
-    //     System.out.println(x.MemRead(11));
+    //     InstructionMemory x = new InstructionMemory();
+    //     x.MemWrite("1");
+    //     x.MemWrite("2");
+    //     x.MemWrite("3");
+    //     x.MemWrite("4");
+    //     x.MemWrite("5");
     // }
 }
