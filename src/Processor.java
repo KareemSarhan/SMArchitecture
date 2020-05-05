@@ -5,7 +5,6 @@ import java.util.Hashtable;
  * This class is our project's main class and contains all the stages.
  */
 public class Processor {
-	
 	public ProgramCounter PC;
 	public InstructionMemory IM;
 	/**
@@ -18,7 +17,7 @@ public class Processor {
 	public Control control;
 	public DataMemory dataMemory;
 	// pipeline registers
-	public Hashtable<String, String> ifIdRegisters;
+	public Hashtable<String, Object> ifIdRegisters;
 	public Hashtable<String, Object> idExRegisters;
 	public Hashtable<String, Object> exMemRegisters;
 	public Hashtable<String, Object> memWbRegisters;
@@ -32,6 +31,9 @@ public class Processor {
 	public String rd; // Write Register
 	public String ALUOp;
 	public String ALUresult;
+	public String ALUSrc;
+	public String Immediate;
+	public String rd; // Write Register
 	public String memoryReadData;
 	// constructor
 	public Processor() {
@@ -42,7 +44,7 @@ public class Processor {
 		IM = new InstructionMemory();
 		
 		// ifId ={PC, CI}
-		ifIdRegisters = new Hashtable<String, String>();
+		ifIdRegisters = new Hashtable<String, Object>();
 		//idEx={writeBackControlSignals, memoryControlSignals, executeControlSignals, PC5.readData1,
 		// 			readData2, immediate, writeRegister}
 		idExRegisters = new Hashtable<String, Object>();
@@ -84,7 +86,7 @@ public class Processor {
 
 		// getting fields from the instruction
 		String opcode = "";
-		String rd = "";
+		// String rd = "";
 		String r1 = "";
 		String r2 = "";
 		String immediate = "";
