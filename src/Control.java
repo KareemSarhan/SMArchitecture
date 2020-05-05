@@ -111,7 +111,7 @@ public class Control {
 			//load word
 			case "01000":
 				executeControlSignals[0] = "000";
-				executeControlSignals[1] = "0";
+				executeControlSignals[1] = "1";
 				executeControlSignals[2] = "0";
 				executeControlSignals[3] = "00";
 				memoryControlSignals[0] = "1";
@@ -122,7 +122,7 @@ public class Control {
 			//store word
 			case "01001":
 				executeControlSignals[0] = "000";
-				executeControlSignals[1] = "0";
+				executeControlSignals[1] = "1";
 				executeControlSignals[2] = "0";
 				executeControlSignals[3] = "00";
 				memoryControlSignals[0] = "0";
@@ -133,7 +133,7 @@ public class Control {
 			//branch on equal
 			case "01010":
 				executeControlSignals[0] = "000";
-				executeControlSignals[1] = "0";
+				executeControlSignals[1] = "1";
 				executeControlSignals[2] = "0";
 				executeControlSignals[3] = "01";
 				memoryControlSignals[0] = "0";
@@ -144,7 +144,7 @@ public class Control {
 			//branch on less than
 			case "01011":
 				executeControlSignals[0] = "000";
-				executeControlSignals[1] = "0";
+				executeControlSignals[1] = "1";
 				executeControlSignals[2] = "0";
 				executeControlSignals[3] = "10";
 				memoryControlSignals[0] = "0";
