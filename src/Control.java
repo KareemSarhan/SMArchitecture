@@ -89,7 +89,7 @@ public class Control {
 			//shift right logical
 			case "00110":
 				executeControlSignals[0] = "101";
-				executeControlSignals[1] = "00";
+				executeControlSignals[1] = "0";
 				executeControlSignals[2] = "0";
 				executeControlSignals[3] = "00";
 				memoryControlSignals[0] = "0";
@@ -133,7 +133,7 @@ public class Control {
 			//branch on equal
 			case "01010":
 				executeControlSignals[0] = "000";
-				executeControlSignals[1] = "1";
+				executeControlSignals[1] = "0";
 				executeControlSignals[2] = "0";
 				executeControlSignals[3] = "01";
 				memoryControlSignals[0] = "0";
@@ -144,7 +144,7 @@ public class Control {
 			//branch on less than
 			case "01011":
 				executeControlSignals[0] = "000";
-				executeControlSignals[1] = "1";
+				executeControlSignals[1] = "0";
 				executeControlSignals[2] = "0";
 				executeControlSignals[3] = "10";
 				memoryControlSignals[0] = "0";

@@ -126,129 +126,74 @@ public class Processor {
 	public void Execute() {
 		//executeControlSignals = {ALUControl, ALUSrc, Jump, Branch}
 		// getting the inputs required for the execution
-		String [] exeControlSignals= (String[]) idExRegisters.get("executeControlSignals");
-		String ALUCont=exeControlSignals[0];
-		String Branch=exeControlSignals[3];
+		String [] executeControlSignals= (String[]) idExRegisters.get("executeControlSignals");
+		String [] memoryControlSignals= (String[]) idExRegisters.get("memoryControlSignals");
+		String [] writeBackControlSignals= (String[]) idExRegisters.get("writeBackControlSignals");
 		String Pc = (String) idExRegisters.get("PC");
 		String ReadData1=(String)idExRegisters.get("readData1");
 		String ReadData2=(String)idExRegisters.get("readData2");
 		String immediate=(String)idExRegisters.get("immediate");
-		String zero="0";
-		String negative="0";
+		String writeRegister = (String) idExRegisters.get("writeRegister");
+		
+		String ALUCont=executeControlSignals[0];
+		String ALUSrc=executeControlSignals[1];
+		String Jump=executeControlSignals[2];
+		String Branch=executeControlSignals[3];
+		
+		String operand2 = ALUSrc=="0"? ReadData2:immediate; 
+		ALU alu=new ALU(ALUCont, ReadData1, operand2);
+		ALUresult=alu.ALUCont();
+		String zero= ((int)Long.parseLong(ALUresult,2)==0)? "1":"0";
+		String negative= ((int)Long.parseLong(ALUresult,2)<0)? "1":"0";
+		
 		if(Branch.equals("01")){
 			//Branch on Equal
-			ALU alu=new ALU(ALUCont, ReadData1, ReadData2);
-			ALUresult=alu.ALUCont();
-			zero=((int)Long.parseLong(ALUresult,2)==0)?"1":"0";
-			if((int)Long.parseLong(ALUresult,2)==0){
-				//Set the PC
-				Pc = immediate;
-				this.PC.Set(Integer.parseInt(Pc,2));System.out.println("ALU result/address: "+ALUresult+"\n"+
-						"Jump Address: "+"00000000000000000000000000000000"+"\n"+
-						"Branch Address: "+Pc+"\n"+
-						"register value to write to memory (Read Data 2): "+ReadData2+"\n"+
-						"Zero Flag: "+zero+"\n"+
-						"Negative Flag: "+negative+"\n"+
-						"WB controls: RegWrite: " + writeBackControlSignals[0] + ", MemToReg: " + writeBackControlSignals[1]+"\n"+
-						"MEM controls: MemRead: " + memoryControlSignals[0] + ", MemWrite: " + memoryControlSignals[1]);
-				return;
-			}
-			System.out.println("ALU result/address: "+ALUresult+"\n"+
-					"Jump Address: "+"00000000000000000000000000000000"+"\n"+
-					"Branch Address: "+"00000000000000000000000000000000"+"\n"+
-					"register value to write to memory (Read Data 2): "+ReadData2+"\n"+
-					"Zero Flag: "+zero+"\n"+
-					"Negative Flag: "+negative+"\n"+
-					"WB controls: RegWrite: " + writeBackControlSignals[0] + ", MemToReg: " + writeBackControlSignals[1]+"\n"+
-					"MEM controls: MemRead: " + memoryControlSignals[0] + ", MemWrite: " + memoryControlSignals[1]);	
-			return;
-		}
-		if(Branch.equals("10")){
-			//Branch on less than
-			ALU alu=new ALU(ALUCont, ReadData1, ReadData2);
-			ALUresult=alu.ALUCont();
-			negative=((int)Long.parseLong(ALUresult,2) <0)?"1":"0";
-			if((int)Long.parseLong(ALUresult,2) <0){
+			if(zero.equals("1")){
 				//Set the PC
 				Pc = immediate;
 				this.PC.Set(Integer.parseInt(Pc,2));
-				System.out.println("ALU result/address: "+ALUresult+"\n"+
-						"Jump Address: "+"00000000000000000000000000000000"+"\n"+
-						"Branch Address: "+Pc+"\n"+
-						"register value to write to memory (Read Data 2): "+ReadData2+"\n"+
-						"Zero Flag: "+zero+"\n"+
-						"Negative Flag: "+negative+"\n"+
-						"WB controls: RegWrite: " + writeBackControlSignals[0] + ", MemToReg: " + writeBackControlSignals[1]+"\n"+
-						"MEM controls: MemRead: " + memoryControlSignals[0] + ", MemWrite: " + memoryControlSignals[1]);
-				return;
 			}
-			System.out.println("ALU result/address: "+ALUresult+"\n"+
-					"Jump Address: "+"00000000000000000000000000000000"+"\n"+
-					"Branch Address: "+"00000000000000000000000000000000"+"\n"+
-					"register value to write to memory (Read Data 2): "+ReadData2+"\n"+
-					"Zero Flag: "+zero+"\n"+
-					"Negative Flag: "+negative+"\n"+
-					"WB controls: RegWrite: " + writeBackControlSignals[0] + ", MemToReg: " + writeBackControlSignals[1]+"\n"+
-					"MEM controls: MemRead: " + memoryControlSignals[0] + ", MemWrite: " + memoryControlSignals[1]);
-			return;
 		}
-		String Jump=exeControlSignals[2];
-		if(Jump.equals("1")){
+		else if(Branch.equals("10")){
+			//Branch on less than
+			if(negative.equals("1")){
+				//Set the PC
+				Pc = immediate;
+				this.PC.Set(Integer.parseInt(Pc,2));
+			}
+		}
+		else if(Jump.equals("1")){
 			Pc = ReadData1;
 			this.PC.Set(Integer.parseInt(Pc,2));
-			System.out.println("ALU result/address: "+ALUresult+"\n"+
-					"Jump Address: "+Pc+"\n"+
-					"Branch Address: "+"00000000000000000000000000000000"+"\n"+
-					"register value to write to memory (Read Data 2): "+ReadData2+"\n"+
-					"Zero Flag: "+zero+"\n"+
-					"Negative Flag: "+negative+"\n"+
-					"WB controls: RegWrite: " + writeBackControlSignals[0] + ", MemToReg: " + writeBackControlSignals[1]+"\n"+
-					"MEM controls: MemRead: " + memoryControlSignals[0] + ", MemWrite: " + memoryControlSignals[1]);
-
-			return;
 		}
-		String ALUSrc=exeControlSignals[1];
-		if(ALUSrc.equals("1")){
-			//for Addi and ANDi and Set on less than immediate
-			ALU alu=new ALU(ALUCont, ReadData1, immediate);
-			ALUresult=alu.ALUCont();
-			System.out.println("ALU result/address: "+ALUresult+"\n"+
-					"Jump Address: "+"00000000000000000000000000000000"+"\n"+
-					"Branch Address: "+"00000000000000000000000000000000"+"\n"+
-					"register value to write to memory (Read Data 2): "+ReadData2+"\n"+
-					"Zero Flag: "+zero+"\n"+
-					"Negative Flag: "+negative+"\n"+
-					"WB controls: RegWrite: " + writeBackControlSignals[0] + ", MemToReg: " + writeBackControlSignals[1]+"\n"+
-					"MEM controls: MemRead: " + memoryControlSignals[0] + ", MemWrite: " + memoryControlSignals[1]);
-			return;
-		}
-		ALU alu=new ALU(ALUCont, ReadData1, ReadData2);
-		ALUresult=alu.ALUCont();
+		
 		System.out.println("ALU result/address: "+ALUresult+"\n"+
-				"Jump Address: "+"00000000000000000000000000000000"+"\n"+
-				"Branch Address: "+"00000000000000000000000000000000"+"\n"+
+				"Jump Address: "+ReadData1+"\n"+
+				"Branch Address: "+immediate+"\n"+
 				"register value to write to memory (Read Data 2): "+ReadData2+"\n"+
 				"Zero Flag: "+zero+"\n"+
 				"Negative Flag: "+negative+"\n"+
-				"WB controls: RegWrite: " + writeBackControlSignals[0] + ", MemToReg: " + writeBackControlSignals[1]+"\n"+
-				"MEM controls: MemRead: " + memoryControlSignals[0] + ", MemWrite: " + memoryControlSignals[1]);
+				"Write Register: "+writeRegister+"\n"+
+				"EX controls: ALUControl: " + executeControlSignals[0] + ", ALUSrc: " + executeControlSignals[1] + ", Jump: " + executeControlSignals[2] + ", Branch: " + executeControlSignals[3]+"\n"+
+				"MEM controls: MemRead: " + memoryControlSignals[0] + ", MemWrite: " + memoryControlSignals[1]+"\n"+
+				"WB controls: RegWrite: " + writeBackControlSignals[0] + ", MemToReg: " + writeBackControlSignals[1]);
 	}
 
 	public void memoryAccess() {
 
 		String[] memoryControlSignals = (String[]) exMemRegisters.get("memoryControlSignals");
+		String[] writeBackControlSignals = (String[]) exMemRegisters.get("writeBackControlSignals");
 		String address = (String) exMemRegisters.get("ALUresult");
 		String data = (String) exMemRegisters.get("readData2");
-
+		String writeRegister = (String) exMemRegisters.get("writeRegister");
 
 		String MemRead = memoryControlSignals[0];
 		String MemWrite = memoryControlSignals[1];
+		int addressInt = convertBinToDecUnsigned(address);
 		if(MemRead.equals("1")) {
-			int addressInt = Integer.parseInt(address);
 			dataMemory.readData(addressInt);
 		}
 		else if(MemWrite.equals("1")) {
-			int addressInt = Integer.parseInt(address);
 			dataMemory.writeData(addressInt, data);
 			memoryReadData="00000000000000000000000000000000";
 		}
@@ -256,11 +201,12 @@ public class Processor {
 			memoryReadData="00000000000000000000000000000000";
 
 		//printing
-		System.out.println("ALU Result: " + address);
-		if(data!=null) {
-			System.out.println("Write data: " + memoryReadData);
-		}
-		System.out.println("WB controls: MemRead: " + memoryControlSignals[0] + ", MemWrite: " + memoryControlSignals[1]);
+		System.out.println("Address: " + address);
+		System.out.println("Write data: " + data);
+		System.out.println("Read data: " + memoryReadData);
+		System.out.println("Write Register: " + writeRegister);
+		System.out.println("Mem controls: MemRead: " + memoryControlSignals[0] + ", MemWrite: " + memoryControlSignals[1]);
+		System.out.println("WB controls: RegWrite: " + writeBackControlSignals[0] + ", MemToReg: " + writeBackControlSignals[1]);
 	}
 
 	public void writeBack() {
@@ -271,18 +217,16 @@ public class Processor {
 		String writeRegister = (String) memWbRegisters.get("writeRegister");
 
 		// choose which data to write
-		String writeData;
-		if (writeBackControlSignals[1].equals("0"))
-			writeData = aluResult;
-		else
-			writeData = memoryReadData;
-
+		String writeData = writeBackControlSignals[1].equals("0")? aluResult: memoryReadData;
+		
 		// register file
 		registerFile.write(writeRegister, writeData, writeBackControlSignals[0]);
 
 		//printing
-		System.out.println("Write data: " + writeData);
+		System.out.println("ALU result: " + aluResult);
+		System.out.println("Memory read data: " + memoryReadData);
 		System.out.println("Write Register: " + writeRegister);
+		System.out.println("Write data: " + writeData);
 		System.out.println("WB controls: RegWrite: " + writeBackControlSignals[0] + ", MemToReg: " + writeBackControlSignals[1]);
 	}
 
@@ -383,21 +327,30 @@ public class Processor {
 		String instructionInMemory = "";
 		String instructionInWriteBack = "";
 		int i=1;
-
+		
+		p.registerFile.view();
+		System.out.println();
+		System.out.println("--------------------------------------------------------------------------");
+		System.out.println();
+		p.dataMemory.viewHead();
+		System.out.println();
+		System.out.println("--------------------------------------------------------------------------");
+		System.out.println();
+		
 		while ((clockCycle-p.PC.Get()) < 4) {
 
 			System.out.println("Clock cycle " + i);
 			//shifting instructions
-
-
-
+			
+			
+			
 			if (clockCycle==0) {
 				//fetch only
 				instructionInFetch = p.IM.MemRead(p.PC.Get());
 				System.out.println();
 				System.out.println("Instruction: " + instructionInFetch + " is in Fetch stage");
 				p.Fetch();
-
+				
 				//shifting registers
 				//after fetch
 				p.ifIdRegisters.put("PC", convertDecToBinUnsigned(p.PC.Get()));
@@ -901,7 +854,7 @@ public class Processor {
 				//shifting registers
 			}
 			System.out.println();
-			System.out.println("PC: "+p.PC.Get()+"    clk: "+clockCycle);
+//			System.out.println("PC: "+p.PC.Get()+"    clk: "+clockCycle);
 			System.out.println("--------------------------------------------------------------------------");
 			System.out.println();
 
@@ -912,6 +865,15 @@ public class Processor {
 
 			i++;
 		}
+		
+		p.registerFile.view();
+		System.out.println();
+		System.out.println("--------------------------------------------------------------------------");
+		System.out.println();
+		p.dataMemory.viewHead();
+		System.out.println();
+		System.out.println("--------------------------------------------------------------------------");
+		System.out.println();
 	}
 }
 
@@ -931,25 +893,38 @@ public class Processor {
  */
 
 
-// 00010000100000000000000000000101
-// 01001000000010100111000000000000
-// 00001000110010000110000000000000
-// 00100010000100101010000000000000
-// 01010000000000000010000000001010
-// 00000010110110000000000000000000
-// 01000100010010100000000000000000
-// 01101000000110000000000000000000
-// 00001000000000000000000000000000
-// 00001000000000000000000000000000
-// 00101011010111000000000000100000
-// 00110011110100100111000000000000
-// 00111100000100100111000000000000
-// 01011000001110111111000000010010
-// 00001000000000000000000000000000
-// 00001000000000000000000000000000
-// 00001000000000000000000000000000
-// 01100000010101100000000000001000
-// 00001101001010110110000000000000
+//00010000100000000000000000000101
+//01001000000010100111000000000000
+//00001000110010000110000000000000
+//00100010000100101010000000000000
+//01010000000000000010000000001010
+//00000010110110011111000000000000
+//01000100010010100000000000000000
+//01101000000110000000000000000000
+//00001000000000000000000000000000
+//00001000000000000000000000000000
+//00101011010111000000000000100000
+//00110011110100100111000000000000
+//00111100000100100111000000000000
+//01011000001110111111000000010010
+//00001000000000000000000000000000
+//00001000000000000000000000000000
+//00001000000000000000000000000000
+//01100000010101100000000000001000
+//00001101001010110110000000000000
+//01011000001111111101000000011100
+//01010000000000000000000000011001
+//00001000000000000000000000000000
+//00001000000000000000000000000000
+//00001000000000000000000000000000
+//00001000000000000000000000000000
+//01100110110000000000000000001000
+//00101011010111000000000000100000
+//00110011110100100111000000000000
+//01000101110000100000000000000000
+//00011110000100101010000000000000
+//01100110101111000000000000001000
+//01000111000000100000000000000000
 
 
 // 00010000100000000000000000000101
